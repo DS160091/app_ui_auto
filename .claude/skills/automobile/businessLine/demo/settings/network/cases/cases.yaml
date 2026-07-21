@@ -1,0 +1,24 @@
+# 示例回归用例库
+#
+# 这是一条可离线跑通的演示用例：操作 Android 系统设置 App，演示 [API]/[UI]/[ADB] 三类步骤。
+# 接入你自己的流程时，复制本叶子改内容即可（见 automobile/SKILL.md §4 新增流程）。
+
+cases:
+  - name: "示例_设置页飞行模式开关回归"
+    priority: P1
+    description: "前置检查 → 打开设置 → 进入网络设置 → 切换飞行模式 → 复位"
+    goal: |
+      执行系统设置飞行模式开关的示例回归流程。每一步只做一个动作。
+      【关键】「操作」与「截图」必须拆成独立步骤：标注 [截图] 的步骤只调用一次 capture_screenshot、不得做任何其他操作；未成功截图不得进入下一步。这样可避免 Manager 把截图当动作步的收尾而丢掉。
+      点击弹窗按钮时，结合弹窗文案/标题限定在弹窗范围内，不要误点背景同名按钮。
+
+      [API] 1.  调用 mock_precheck 完成前置检查，获取 run_id。预期：code 0
+      [UI]  2.  打开 App（设置，包名 com.android.settings），确认停在设置首页。
+      [UI]  3.  [截图] 调用 capture_screenshot(step_name="01_设置首页")
+      [UI]  4.  在设置首页点击【网络和互联网】进入网络设置页。
+      [UI]  5.  [截图] 调用 capture_screenshot(step_name="02_网络和互联网页")
+      [ADB] 6.  【编排层直接执行，不走 MobileRun】切换飞行模式为开：先 `adb -s "$D" shell settings get global airplane_mode_on` 读当前值，再 `adb -s "$D" shell settings put global airplane_mode_on 1` 并 `adb -s "$D" shell am broadcast -a android.intent.action.AIRPLANE_MODE`。之后必须回读 `settings get global airplane_mode_on` 校验等于 1，不等于则本步失败中断（见 SKILL.md §3 场景一）。
+      [UI]  7.  [截图] 调用 capture_screenshot(step_name="03_飞行模式已开")
+      [ADB] 8.  【编排层直接执行，不走 MobileRun】复位飞行模式为关：`adb -s "$D" shell settings put global airplane_mode_on 0` 并广播 android.intent.action.AIRPLANE_MODE。回读校验等于 0，不等于则本步失败中断。
+      [UI]  9.  [截图] 调用 capture_screenshot(step_name="04_飞行模式已复位")
+    max_steps: 200

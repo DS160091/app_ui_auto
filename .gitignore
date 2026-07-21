@@ -1,0 +1,23 @@
+# ── 敏感配置（务必忽略，避免泄露密钥）──
+.env
+**/.env
+
+# ── 运行产物 ──
+**/reports/*
+!**/reports/.gitkeep
+**/screenshots/*
+!**/screenshots/.gitkeep
+**/run_context.json
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# ── IDE / 系统 ──
+.idea/
+.vscode/
+.DS_Store

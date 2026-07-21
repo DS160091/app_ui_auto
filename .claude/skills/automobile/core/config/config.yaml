@@ -1,0 +1,49 @@
+# MobileRun (mobilerun) SDK 配置
+# Manager + Executor 双 Agent 协作模式
+
+agent:
+  name: mobilerun
+  reasoning: true
+  max_steps: 60
+  streaming: true
+  manager:
+    vision: false          # 决策角色，纯文本推理
+  executor:
+    vision: true           # 视觉定位，不可替代
+  app_cards:
+    enabled: true
+    mode: local
+    app_cards_dir: config/app_cards
+
+llm_profiles:
+  # 这里是默认值，最终值由 .env 覆盖（见 runner.py）：
+  #   - manager / app_opener / structured_output ← DECISION_MODEL / DECISION_BASE_URL
+  #   - executor                                 ← EXECUTOR_PROVIDER / EXECUTOR_MODEL / EXECUTOR_BASE_URL
+  # 默认走 Anthropic 官方端点；如需换成任意兼容网关（自建 / 第三方），在 .env 里改 *_BASE_URL 即可。
+  # provider 决定协议：Anthropic 走 /v1/messages，OpenAI/DeepSeek 走 /v1/chat/completions。
+  manager:
+    provider: Anthropic
+    model: claude-opus-4-8
+    temperature: 0
+    base_url: https://api.anthropic.com
+  executor:
+    provider: Anthropic
+    model: claude-sonnet-4-6
+    temperature: 0
+    base_url: https://api.anthropic.com
+  app_opener:
+    provider: Anthropic
+    model: claude-opus-4-8
+    temperature: 0
+    base_url: https://api.anthropic.com
+  structured_output:
+    provider: Anthropic
+    model: claude-opus-4-8
+    temperature: 0
+    base_url: https://api.anthropic.com
+
+device:
+  serial: null
+  platform: android
+  use_tcp: true
+  auto_setup: true

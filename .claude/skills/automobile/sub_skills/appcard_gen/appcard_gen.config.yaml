@@ -1,0 +1,17 @@
+# appcard_gen 生成配置样例
+#
+# 用法：复制本文件为自己的配置（如 myapp.appcard_gen.yaml），把每个字段填成真实值，
+#       再执行 /appcard_gen 并把配置路径告诉我。执行时会先 validate.py 强校验，
+#       任一必填项缺失或截图目录无效都会中断，不会生成半成品。
+#
+# 路径规则：相对路径一律相对【本配置文件所在目录】解析；也可写绝对路径。
+
+# —— 必填 ——
+
+# 截图目录：本流程经过的每个关键页面/弹窗各一张，建议按序号命名（01_首页.png ...）。
+# 必须真实存在且至少含一张图片，否则校验不过。
+screenshots_dir: ../../businessLine/demo/settings/network/base_pic
+
+# 生成的 app_card.md 写到哪。父目录不存在会自动创建；同名文件会被覆盖。
+output_path: ../../businessLine/demo/settings/network/app_cards/settings_app.md
+

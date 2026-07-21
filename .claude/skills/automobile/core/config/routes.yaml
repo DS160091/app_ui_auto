@@ -1,0 +1,33 @@
+# 回归流程路由注册表 —— 唯一事实来源
+#
+# 顶层路由 Skill(automobile/SKILL.md)据此把用户诉求匹配到具体叶子流程。
+# 新增一条回归流程时,在此处加一条 route 即可,无需改 router.py 与路由层逻辑。
+#
+# 字段说明:
+#   skill_name    : 该流程 playbook 的 name(与叶子 SKILL.md frontmatter 的 name 一致)
+#   business_line : 业务线(如 demo)
+#   app           : App(如 settings)
+#   category      : 品类/子类(如 网络)
+#   scene         : 场景(如 系统设置回归)
+#   leaf_dir      : 叶子目录,相对 Skill 根(automobile/)。Router 会解析成绝对路径作为 LEAF_DIR
+#   keywords      : 兜底关键词,供 Router 打分预筛(语义判断仍由编排层 Claude 做)
+#   description   : 一句话描述,供路由展示与确认
+#
+# apps: App 元数据映射表(App 维度,非流程维度)。
+#   同一 App 下多条流程共用,key 与各 route 的 app 字段对应。
+#   package: Android 包名,open_app 启动 App 用的真实包名(不要用 app 代号当包名)。
+
+apps:
+  settings:
+    package: com.android.settings
+    app_label: 设置
+
+routes:
+  - skill_name: demo-settings-network
+    business_line: demo
+    app: settings
+    category: 网络
+    scene: 系统设置回归
+    leaf_dir: businessLine/demo/settings/network
+    keywords: [demo, 示例, 设置, 网络, 飞行模式, airplane, settings]
+    description: 示例流程 —— 打开系统设置进入网络和互联网页，切换飞行模式开关并回读校验（可离线跑通，演示 [API]/[UI]/[ADB] 三类步骤）

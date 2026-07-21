@@ -1,0 +1,35 @@
+{
+  "order_id": "",
+  "run_id": "",
+  "skill_name": "",
+  "business_line": "",
+  "app": "",
+  "category": "",
+  "scene": "",
+  "case_name": "",
+  "priority": "",
+  "result": "",
+  "total_steps": 0,
+  "passed_steps": 0,
+  "start_time": "",
+  "end_time": "",
+  "duration_sec": 0,
+  "steps": [
+    {
+      "step_no": 0,
+      "step_type": "",
+      "description": "",
+      "result": "",
+      "duration_sec": null,
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "step_no": null,
+      "step_name": "",
+      "cdn_url": "",
+      "seq": 0
+    }
+  ]
+}
