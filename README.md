@@ -54,10 +54,27 @@ mobilerun doctor      # 确认 Portal / 无障碍 / Content Provider 就绪
 │   ├── config/              # config.yaml（模型/设备）+ routes.yaml（流程注册表）
 │   ├── models.py            # 报告数据模型
 │   └── tools/               # 截图 / 报告生成 / doctor 预检
-├── sub_skills/              # 可选公共能力（App 操作手册生成、报告发布等）
+├── sub_skills/              # 可选公共能力：见下方「可选公共能力」一节
+│   ├── appcard_gen/         # 喂截图自动生成 App 操作手册
+│   ├── pic_upload/          # 截图上传到你的图床，拿回可访问 URL
+│   └── report_upload/       # 报告原文上传到你的接口落库留底
 └── businessLine/            # 业务树：业务线 → App → 品类 → 场景（叶子=一条流程）
     └── <example>/…          # 每个叶子自带 SKILL.md / cases / app_cards / skills
 ```
+
+## 可选公共能力（sub_skills）
+
+`sub_skills/` 下是三个**独立、可选**的辅助能力，被主流程按需调用，也可单独使用。它们都不是回归流程本身，不进 `businessLine/` 业务树、不登记 `routes.yaml`。默认不配置就完全不启用，不影响跑通最小流程。
+
+| 子 skill | 是什么 | 什么时候用 | 效果 |
+|----------|--------|-----------|------|
+| **appcard_gen** | App 操作手册生成器 | 接入一个新 App、要写 `app_cards/<app>.md` 又不想手敲时 | 喂一组页面截图，多模态识别每页的可点/可断言控件，套骨架自动生成一份控件手册，人工核对即可用 |
+| **pic_upload** | 图片上传器（纯标准库） | 想把报告里的截图存到自己的图床/对象存储、让报告能在线看图时 | 把本地截图（单张或整目录）POST 到你配置的接口，返回可访问 URL，回填进报告的 `cdn_url` |
+| **report_upload** | 报告落库器（纯标准库） | 想把每次回归的 `report.json` 原文留底到自己的后台时 | 把报告原文按订单号 POST 到你配置的接口落库，供你自己的后台系统接收、存储与展示 |
+
+> 三者的接口地址、鉴权全部由环境变量提供，脚本内**无任何预置地址**：`pic_upload` 需 `PIC_UPLOAD_URL`(+`PIC_UPLOAD_SIGN`)、`report_upload` 需 `REPORT_UPLOAD_URL`，未配置即安全跳过。报告的「上传截图 / 落库留底」由 `core/tools/publish_report.py` 在配了对应变量时自动串起这两个能力；详见各子 skill 的 `SKILL.md` 与 `core/common_playbook.md` 报告发布章节。
+>
+> 说明：本框架只负责**产出报告并可选地上传**，接收上传、存储、在网页展示的**后台系统需你自行实现**（上表的接口即对接点）。想自建后台的话，[`docs/backend-integration.md`](docs/backend-integration.md) 提供了一套可直接参考的库表设计与 `report.json` 落库映射思路。
 
 ## 如何新增一条回归流程
 
